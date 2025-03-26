@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Simple Event Emitter</title>
+  <meta charset="UTF-8" />
+  <script>
+    function emitSuccess() {
+      if (window.parent !== window) {
+        // From iframe -> parent
+        window.parent.postMessage('app_success', '*');
+      } else if (window.FlutterChannel) {
+        // From standalone WebView page
+        FlutterChannel.postMessage('app_success');
+      }
+    }
+
+    function emitConsent() {
+      if (window.parent !== window) {
+        window.parent.postMessage('consent_granted', '*');
+      } else if (window.FlutterChannel) {
+        FlutterChannel.postMessage('consent_granted');
+      }
+    }
+
+    window.onload = () => {
+      document.getElementById("btn-success").addEventListener("click", emitSuccess);
+      document.getElementById("btn-consent").addEventListener("click", emitConsent);
+    };
+  </script>
+</head>
+<body>
+  <h1>Emit Events to Flutter</h1>
+  <button id="btn-success">Send app_success</button>
+  <button id="btn-consent">Send consent_granted</button>
+</body>
+</html>
